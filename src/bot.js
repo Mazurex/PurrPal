@@ -42,7 +42,6 @@ class Bot {
       await mongoose.connect(process.env.URI);
       console.log("Logged into the database");
       await this.client.login(process.env.TOKEN);
-      console.log("Bot is online");
     } catch (err) {
       console.log(err);
     }

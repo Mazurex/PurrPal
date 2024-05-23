@@ -71,7 +71,6 @@ module.exports = {
           economy: { coins: 0 }, // Initialize economy field
           inventory: [],
           cat: [],
-          nextDaily: Date.now() + 86400 * 1000,
         });
       }
 
