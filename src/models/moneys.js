@@ -4,7 +4,6 @@ const moneySchema = new mongoose.Schema({
   userId: { type: String, required: true, unique: true },
   economy: {
     coins: { type: Number, default: 0 },
-    nextDaily: { type: String, default: 0 },
   },
   inventory: { type: Array, default: [] },
   cat: [
@@ -21,7 +20,6 @@ const moneySchema = new mongoose.Schema({
       },
     },
   ],
-  nextDaily: { type: Number, default: 0 },
 });
 
 module.exports = mongoose.model("moneys", moneySchema);
