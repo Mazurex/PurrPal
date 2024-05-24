@@ -23,13 +23,20 @@ class LevellingHandler {
             const randomSkillIndex = Math.floor(Math.random() * skills.length);
             const randomSkill = skills[randomSkillIndex];
             cat.skills[randomSkill] += 1;
+            profile.economy.coins += (500 * cat.level) / 2;
 
             interaction.channel.send({
-              content: `${interaction.user} you have levelled up to level \`${cat.level}\`, level is a multiple of 5, +1 skill point to ${randomSkill}`,
+              content: `${interaction.user} you have levelled up to level \`${
+                cat.level
+              }\` and recieved ${
+                (500 * cat.level) / 2
+              } coins, level is a multiple of 5, +1 skill point to ${randomSkill}`,
             });
           } else {
             interaction.channel.send({
-              content: `${interaction.user} you have levelled up to level \`${cat.level}\`!`,
+              content: `${interaction.user} you have levelled up to level \`${
+                cat.level
+              }\` and recieved ${(500 * cat.level) / 2} coins!`,
             });
           }
         }

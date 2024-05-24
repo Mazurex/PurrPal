@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const moneys = require("../../models/moneys");
+const Global = require("../../models/global");
 const fs = require("fs");
 const path = require("path");
 
@@ -83,6 +84,14 @@ module.exports = {
       });
 
       await profile.save();
+
+      let globalData = await Global.findOne();
+      if (!globalData) {
+        globalData = new Global();
+      }
+
+      globalData.totalCats += 1;
+      await globalData.save();
 
       const adoptionEmbed = new EmbedBuilder()
         .setColor("Aqua")

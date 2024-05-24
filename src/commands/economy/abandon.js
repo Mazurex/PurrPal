@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const moneys = require("../../models/moneys");
+const global = require("../../models/global");
 
 const abandonmentMessages = [
   "You have left <%= catName %> on a random street, your whole profile has been wiped as you hear <%= catName %> meowing for you to come back!",
@@ -54,6 +55,14 @@ module.exports = {
       await interaction.reply({ embeds: [embed] });
 
       await moneys.findOneAndDelete({ userId: interaction.user.id });
+
+      let globalData = await Global.findOne();
+      if (!globalData) {
+        return;
+      }
+
+      globalData.totalCats -= 1;
+      await globalData.save();
     } catch (err) {
       console.error(err);
       interaction.reply({
