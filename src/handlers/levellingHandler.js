@@ -11,6 +11,10 @@ class LevellingHandler {
     try {
       const profile = await moneys.findOne({ userId: this.userId });
 
+      if (!profile || !profile.cat) {
+        throw new Error("Profile or cats not found.");
+      }
+
       profile.cat.forEach((cat) => {
         cat.xp += this.xpToGive;
 
@@ -26,18 +30,20 @@ class LevellingHandler {
             cat.skills[randomSkill] += 1;
             profile.economy.coins += (500 * cat.level) / 2;
 
-            interaction.channel.send({
-              content: `${interaction.user} you have levelled up to level \`${
-                cat.level
-              }\` and recieved ${
+            this.interaction.channel.send({
+              content: `${
+                this.interaction.user
+              } you have levelled up to level \`${cat.level}\` and received ${
                 (500 * cat.level) / 2
-              } coins, level is a multiple of 5, +1 skill point to ${randomSkill}`,
+              } coins. Level is a multiple of 5, +1 skill point to ${randomSkill}`,
             });
           } else {
-            interaction.channel.send({
-              content: `${interaction.user} you have levelled up to level \`${
-                cat.level
-              }\` and recieved ${(500 * cat.level) / 2} coins!`,
+            this.interaction.channel.send({
+              content: `${
+                this.interaction.user
+              } you have levelled up to level \`${cat.level}\` and received ${
+                (500 * cat.level) / 2
+              } coins!`,
             });
           }
         }

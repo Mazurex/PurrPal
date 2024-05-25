@@ -14,6 +14,7 @@ module.exports = {
     ),
   async execute(interaction) {
     const amount = interaction.options.getInteger("amount");
+    const hasPass = false;
 
     try {
       // Fetch user profile
@@ -23,6 +24,24 @@ module.exports = {
         return interaction.reply({
           content: "You don't have a profile yet.",
           ephemeral: true,
+        });
+      }
+
+      if (!hasPass && amount >= 10_000) {
+        return interaction.reply({
+          content:
+            "You do not have the correct gambling pass to gamble this much",
+        });
+      }
+
+      if (amount < 500) {
+        return interaction.reply({
+          content: "You must bet at least `500` coins!",
+        });
+      } else if (hasPass && amount < 2_500) {
+        return interaction.reply({
+          content:
+            "Due to your gambling pass, you must bet at least `2500` coins!",
         });
       }
 

@@ -16,6 +16,7 @@ module.exports = async (interaction, command) => {
       });
       return false;
     }
+
     const cat = profile.cat[0];
     const intelligenceMultiplier = cat.skills.intelligence / 10;
 
@@ -27,7 +28,8 @@ module.exports = async (interaction, command) => {
 
     const levellingHandler = new LevellingHandler(
       xpToGive,
-      interaction.user.id
+      interaction.user.id,
+      interaction
     );
     await levellingHandler.handle();
 

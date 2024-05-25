@@ -16,7 +16,7 @@ class Bot {
         GatewayIntentBits.GuildMembers,
         GatewayIntentBits.MessageContent,
       ],
-      allowedMentions: { parse: ["roles"] },
+      allowedMentions: { parse: ["roles", "users"] },
     });
 
     this.client.commands = new Collection();
