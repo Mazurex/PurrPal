@@ -7,9 +7,9 @@ module.exports = {
   async execute(guild) {
     try {
       let globalData = await Global.findOne();
-      if (!globalData) {
-        globalData = new Global();
-      }
+      // if (!globalData) {
+      //   globalData = new Global();
+      // }
 
       globalData.guilds.push({
         guildId: guild.id,

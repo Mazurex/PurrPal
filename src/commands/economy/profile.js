@@ -41,12 +41,27 @@ module.exports = {
             },
             {
               name: "XP",
-              value: `${cat.xp} / ${Math.floor((cat.level * 2 + 5) / 0.15)}`,
+              value: `[ ${cat.xp} / ${Math.floor(
+                (cat.level * 2 + 5) / 0.15
+              )} ]`,
             }
           );
         interaction.reply({ embeds: [embed] });
       } else if (category === "skills") {
-        // ...
+        const embed = new EmbedBuilder()
+          .setColor("Blue")
+          .setTitle(`${interaction.user.username}'s skills`)
+          .setDescription(`View the skills of ${cat.name}`);
+
+        Object.keys(cat.skills).forEach((skill) => {
+          embed.addFields({
+            name: skill.charAt(0).toUpperCase() + skill.slice(1),
+            value: cat.skills[skill].toString(),
+            inline: true,
+          });
+        });
+
+        interaction.reply({ embeds: [embed] });
       } else if (category === "inventory") {
         // ...
       }

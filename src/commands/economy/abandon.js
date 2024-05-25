@@ -56,7 +56,7 @@ module.exports = {
 
       await moneys.findOneAndDelete({ userId: interaction.user.id });
 
-      let globalData = await Global.findOne();
+      let globalData = await global.findOne();
       if (!globalData) {
         return;
       }
