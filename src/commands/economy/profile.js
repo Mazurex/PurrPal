@@ -31,8 +31,7 @@ module.exports = {
           .addFields(
             {
               name: "Balance",
-              value: profile.economy.coins.toString(),
-              inline: true,
+              value: `<:coin:1243888785025138749> ${profile.economy.coins} Claw Credits`,
             },
             {
               name: "Level",
@@ -44,6 +43,7 @@ module.exports = {
               value: `[ ${cat.xp} / ${Math.floor(
                 (cat.level * 2 + 5) / 0.15
               )} ]`,
+              inline: true,
             }
           );
         interaction.reply({ embeds: [embed] });

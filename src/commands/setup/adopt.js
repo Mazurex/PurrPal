@@ -98,20 +98,17 @@ module.exports = {
         .setTitle(`${interaction.user.username}'s adoption complete🐱`)
         .setDescription(
           "Congrats on adopting a cat! Each cat is unique and comes with its own base skills!"
-        )
-        .addFields(
-          { name: "Cat Name", value: name, inline: true },
-          { name: "Adoption ID", value: id, inline: true },
-          { name: "Level", value: `0`, inline: true },
-          { name: "Strength", value: `${skills.strength} / 20`, inline: true },
-          { name: "Cuteness", value: `${skills.cuteness} / 20`, inline: true },
-          { name: "Agility", value: `${skills.agility} / 20`, inline: true },
-          {
-            name: "Intelligence",
-            value: `${skills.intelligence} / 20`,
+        );
+
+      const cat = profile.cat[0];
+      Object.keys(cat.skills)
+        .forEach((skill) => {
+          embed.addFields({
+            name: skill.charAt(0).toUpperCase() + skill.slice(1),
+            value: cat.skills[skill].toString(),
             inline: true,
-          }
-        )
+          });
+        })
         .setFooter({
           text: "Tip: use the `/guide` command to learn how to earn money and levels!",
         })
