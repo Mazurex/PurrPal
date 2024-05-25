@@ -36,7 +36,7 @@ module.exports = {
             },
             {
               name: "Level",
-              value: cat.level.toString(),
+              value: `[ ${cat.level} / 100 ]`,
               inline: true,
             },
             {

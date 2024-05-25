@@ -4,6 +4,7 @@ class LevellingHandler {
   constructor(xpToGive, userId, interaction) {
     this.xpToGive = xpToGive;
     this.userId = userId;
+    this.interaction = interaction;
   }
 
   async handle() {
