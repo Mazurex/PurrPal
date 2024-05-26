@@ -108,7 +108,9 @@ module.exports = {
 
           const updatedEmbed = new EmbedBuilder()
             .setColor("Green")
-            .setTitle(`${target.username}'s Bank Data`)
+            .setTitle(
+              `<:bank_icon:1244404825664524378> ${target.username}'s Bank Data`
+            )
             .addFields(
               {
                 name: "Current Tier",
@@ -127,9 +129,9 @@ module.exports = {
               },
               {
                 name: "Next Tier Limit",
-                value: nextUpdatedTierInfo
-                  ? nextUpdatedTierInfo.toString()
-                  : "N/A",
+                value: `<:tiers:1244368717941571705> ${
+                  nextUpdatedTierInfo ? nextUpdatedTierInfo.toString() : "N/A"
+                }`,
                 inline: true,
               },
               {
