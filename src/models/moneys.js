@@ -15,6 +15,10 @@ const moneySchema = new mongoose.Schema({
       type: Number,
       default: 0,
     },
+    bankTier: {
+      type: Number,
+      default: 1,
+    },
   },
   inventory: {
     type: Array,

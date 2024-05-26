@@ -27,6 +27,8 @@ module.exports = {
       profile.economy.coins += amount;
       profile.economy.bank -= amount;
 
+      await profile.save();
+
       const embed = new EmbedBuilder()
         .setColor("Green")
         .setTitle(`${interaction.user.username} withdrew coins from their bank`)

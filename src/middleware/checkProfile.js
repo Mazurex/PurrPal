@@ -1,5 +1,4 @@
 const Profile = require("../models/moneys");
-const LevellingHandler = require("../handlers/levellingHandler");
 const applyInterest = require("./interest");
 
 module.exports = async (interaction, command) => {
@@ -17,22 +16,6 @@ module.exports = async (interaction, command) => {
       });
       return false;
     }
-
-    const cat = profile.cat[0];
-    const intelligenceMultiplier = cat.skills.intelligence / 10;
-
-    let xpToGive = 5;
-
-    if (Math.random() <= 0.25) {
-      xpToGive *= intelligenceMultiplier;
-    }
-
-    const levellingHandler = new LevellingHandler(
-      xpToGive,
-      interaction.user.id,
-      interaction
-    );
-    await levellingHandler.handle();
 
     const interest = await applyInterest(interaction.user.id);
 

@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const moneys = require("../../models/moneys");
+const bankTier = require("../../handlers/bankTier");
 
 module.exports = {
   cooldown: 5,
@@ -24,8 +25,17 @@ module.exports = {
           ephemeral: true,
         });
 
+      if (amount + profile.economy.bank > bankTier(profile.economy.bankTier))
+        return interaction.reply({
+          content:
+            "You have reached your bank limit! You can upgrade this limit by upgrading your bank tier with `/bank`",
+          ephemeral: true,
+        });
+
       profile.economy.coins -= amount;
       profile.economy.bank += amount;
+
+      await profile.save();
 
       const embed = new EmbedBuilder()
         .setColor("Green")

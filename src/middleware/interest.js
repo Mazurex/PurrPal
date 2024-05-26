@@ -1,4 +1,5 @@
 const moneys = require("../models/moneys");
+const bankTier = require("../handlers/bankTier");
 
 const applyInterest = async (userId) => {
   const interestRate = 0.02;
@@ -20,7 +21,15 @@ const applyInterest = async (userId) => {
 
     if (diffDays >= 1 && profile.economy.bank > 0) {
       const interest = Math.floor(profile.economy.bank * realInterestRate);
-      profile.economy.bank += interest; // Check if the amount to give would exceed the max bank limit, and if it does, then give it to their coins instead
+
+      if (
+        profile.economy.bank + interest >
+        bankTier(profile.economy.bankTier)
+      ) {
+        profile.economy.coins += interest;
+      } else {
+        profile.economy.bank += interest;
+      }
       profile.lastInterest = now;
       await profile.save();
 

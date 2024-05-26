@@ -30,8 +30,8 @@ module.exports = {
       interaction.options.getString("gift_message") ?? "No gift message";
 
     try {
-      const userProfile = moneys.findOne({ userId: interaction.user.id });
-      const targetProfile = moneys.findOne({ userId: target.user.id });
+      const userProfile = await moneys.findOne({ userId: interaction.user.id });
+      const targetProfile = await moneys.findOne({ userId: target.id });
 
       if (!targetProfile) {
         return interaction.reply({
@@ -49,6 +49,9 @@ module.exports = {
 
       userProfile.economy.coins -= amount;
       targetProfile.economy.coins += amount;
+
+      await userProfile.save();
+      await targetProfile.save();
 
       interaction.reply({
         content: `Successfully gifted \`${amount} coins\` to ${target.username}`,

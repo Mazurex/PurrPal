@@ -8,7 +8,7 @@ module.exports = {
     .setDescription("Hunt for a chance of winning some coins!"),
   async execute(interaction) {
     try {
-      const profile = moneys.findOne({ userId: interaction.user.id });
+      const profile = await moneys.findOne({ userId: interaction.user.id });
 
       const cat = profile.cat[0];
 

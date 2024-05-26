@@ -82,7 +82,7 @@ module.exports = {
       const resultMessage =
         netResult >= 0
           ? `You won ${netResult} coins!`
-          : `You lost ${Math.abs(netResult)} coins!`;
+          : `You lost all your coins!`;
 
       // Create the response embed
       const embed = new EmbedBuilder()

@@ -33,17 +33,17 @@ class LevellingHandler {
             this.interaction.channel.send({
               content: `${
                 this.interaction.user
-              } you have levelled up to level \`${cat.level}\` and received ${
+              } you have levelled up to level \`${cat.level}\` and received \`${
                 (500 * cat.level) / 2
-              } coins. Level is a multiple of 5, +1 skill point to ${randomSkill}`,
+              }\` coins. Level is a multiple of 5, +1 skill point to \`${randomSkill}\``,
             });
           } else {
             this.interaction.channel.send({
               content: `${
                 this.interaction.user
-              } you have levelled up to level \`${cat.level}\` and received ${
+              } you have levelled up to level \`${cat.level}\` and received \`${
                 (500 * cat.level) / 2
-              } coins!`,
+              }\` coins!`,
             });
           }
         }

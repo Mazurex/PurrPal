@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const moneys = require("../../models/moneys");
+const bankTier = require("../../handlers/bankTier");
 
 module.exports = {
   cooldown: 5,
@@ -31,12 +32,19 @@ module.exports = {
           .addFields(
             {
               name: "Balance",
-              value: `<:coin:1243888785025138749> ${profile.economy.coins} Claw Credits`,
+              value: `<:coin:1243888785025138749> ${profile.economy.coins}`,
               inline: true,
             },
             {
               name: "Bank Balance",
-              value: `${profile.economy.bank} Claw Credits`,
+              value: `<:bank:1244368716066455712> [ ${
+                profile.economy.bank
+              } / ${bankTier(profile.economy.bankTier)} ]`,
+              inline: true,
+            },
+            {
+              name: "Bank Tier",
+              value: `<:tiers:1244368717941571705> Tier ${profile.economy.bankTier}`,
               inline: true,
             },
             {

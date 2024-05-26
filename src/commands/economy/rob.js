@@ -3,7 +3,7 @@ const moneys = require("../../models/moneys");
 const global = require("../../models/global");
 
 module.exports = {
-  cooldown: 5,
+  cooldown: 2160,
   data: new SlashCommandBuilder()
     .setName("rob")
     .setDescription("Steal some money from a different use")
@@ -49,7 +49,7 @@ module.exports = {
         globalStuff.totalRobberies++;
 
         const embed = new EmbedBuilder()
-          .setColor("red")
+          .setColor("Red")
           .setTitle(`${interaction.user.username}'s robbery result`)
           .setDescription(
             `${interaction.user} has stole \`${amountToSteal}\` coins from ${target}`
@@ -70,7 +70,7 @@ module.exports = {
         } catch {}
       } else if (finalSuccessChance >= 0.11 && finalSuccessChance < 0.56) {
         const embed = new EmbedBuilder()
-          .setColor("red")
+          .setColor("Red")
           .setTitle(`${interaction.user.username}'s robbery result`)
           .setDescription(
             `${interaction.user} has stole \`0\` coins from ${target}`
@@ -83,7 +83,7 @@ module.exports = {
         profile.economy.coins -= amountLost;
 
         const embed = new EmbedBuilder()
-          .setColor("red")
+          .setColor("Red")
           .setTitle(`${interaction.user.username}'s robbery result`)
           .setDescription(
             `${interaction.user} has attempted to steal from ${target} however they failed and lost \`${amountLost}\` coins!`
@@ -91,6 +91,10 @@ module.exports = {
           .setTimestamp();
         interaction.reply({ embeds: [embed] });
       }
+
+      await profile.save();
+      await targetProfile.save();
+      await globalStuff.save();
     } catch (err) {
       interaction.reply({
         content: "There was an error with this command!",

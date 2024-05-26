@@ -7,9 +7,6 @@ module.exports = {
   async execute(guild) {
     try {
       let globalData = await Global.findOne();
-      if (!globalData) {
-        return;
-      }
 
       globalData.guilds = globalData.guilds.filter(
         (g) => g.guildId !== guild.id
