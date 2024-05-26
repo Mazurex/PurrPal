@@ -20,7 +20,7 @@ const applyInterest = async (userId) => {
 
     if (diffDays >= 1 && profile.economy.bank > 0) {
       const interest = Math.floor(profile.economy.bank * realInterestRate);
-      profile.economy.bank += interest;
+      profile.economy.bank += interest; // Check if the amount to give would exceed the max bank limit, and if it does, then give it to their coins instead
       profile.lastInterest = now;
       await profile.save();
 

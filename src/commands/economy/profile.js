@@ -32,18 +32,24 @@ module.exports = {
             {
               name: "Balance",
               value: `<:coin:1243888785025138749> ${profile.economy.coins} Claw Credits`,
+              inline: true,
+            },
+            {
+              name: "Bank Balance",
+              value: `${profile.economy.bank} Claw Credits`,
+              inline: true,
             },
             {
               name: "Level",
               value: `[ ${cat.level} / 100 ]`,
-              inline: true,
+              inline: false,
             },
             {
               name: "XP",
               value: `[ ${cat.xp} / ${Math.floor(
                 (cat.level * 2 + 5) / 0.15
               )} ]`,
-              inline: true,
+              inline: false,
             }
           );
         interaction.reply({ embeds: [embed] });

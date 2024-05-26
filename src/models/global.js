@@ -9,6 +9,8 @@ const globalSchema = new mongoose.Schema({
   guilds: [guildSchema],
   totalGuilds: { type: Number, default: 0 },
   totalCats: { type: Number, default: 0 },
+  totalRobberies: { type: Number, default: 0 },
+  totalStole: { type: Number, default: 0 },
 });
 
 module.exports = mongoose.model("Global", globalSchema);
