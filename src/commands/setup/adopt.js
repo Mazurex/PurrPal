@@ -69,7 +69,7 @@ module.exports = {
         // Initialize profile with default values
         profile = new moneys({
           userId: interaction.user.id,
-          economy: { coins: 0 }, // Initialize economy field
+          economy: { coins: 0, bank: 0 }, // Initialize economy field
           inventory: [],
           cat: [],
         });

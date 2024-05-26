@@ -11,6 +11,10 @@ const moneySchema = new mongoose.Schema({
       type: Number,
       default: 0,
     },
+    bank: {
+      type: Number,
+      default: 0,
+    },
   },
   inventory: {
     type: Array,
@@ -51,6 +55,7 @@ const moneySchema = new mongoose.Schema({
       },
     },
   ],
+  lastInterest: { type: Date, default: null },
 });
 
 module.exports = mongoose.model("moneys", moneySchema);

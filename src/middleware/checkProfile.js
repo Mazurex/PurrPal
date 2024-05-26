@@ -1,5 +1,6 @@
 const Profile = require("../models/moneys");
 const LevellingHandler = require("../handlers/levellingHandler");
+const applyInterest = require("./interest");
 
 module.exports = async (interaction, command) => {
   try {
@@ -32,6 +33,14 @@ module.exports = async (interaction, command) => {
       interaction
     );
     await levellingHandler.handle();
+
+    const interest = await applyInterest(interaction.user.id);
+
+    if (interest > 0) {
+      interaction.channel.send({
+        content: `${interaction.user} you have recieved \`${interest}\` coins in interest from your bank! Your bank now has \`${profile.economy.bank}\` coins!`,
+      });
+    }
 
     return true;
   } catch (err) {
