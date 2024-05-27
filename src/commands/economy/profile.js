@@ -1,6 +1,9 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const moneys = require("../../models/moneys");
 const bankTier = require("../../handlers/bankTier");
+const loadItems = require("../../handlers/loadItems");
+
+const ITEMS_PER_PAGE = 5;
 
 const rankEmojis = {
   0: "<:noob1:1244599324369752177><:noob2:1244599350110191709><:noob3:1244599328534958172>",
@@ -9,27 +12,48 @@ const rankEmojis = {
   3: "<:mod1:1244599320989274142><:mod2:1244599322243498064><:mod3:1244599323367313439>",
 };
 
+// Function to paginate items
+const paginateItems = (items, page, itemsPerPage) => {
+  const totalItems = items.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const start = (page - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const paginatedItems = items.slice(start, end);
+
+  return {
+    paginatedItems,
+    totalPages,
+  };
+};
+
 module.exports = {
   cooldown: 5,
   data: new SlashCommandBuilder()
     .setName("profile")
     .setDescription("Display your profile")
-    .addStringOption((option) =>
-      option
-        .setName("category")
-        .setDescription("What category should be opened")
-        .addChoices(
-          { name: "Main", value: "main" },
-          { name: "Skills", value: "skills" },
-          { name: "Inventory", value: "inventory" }
+    .addSubcommand((subcommand) =>
+      subcommand.setName("main").setDescription("The main profile information")
+    )
+    .addSubcommand((subcommand) =>
+      subcommand.setName("skills").setDescription("Your cat's skills")
+    )
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName("inventory")
+        .setDescription("Your inventory")
+        .addIntegerOption((option) =>
+          option
+            .setName("page")
+            .setDescription("The page number of the inventory")
+            .setRequired(false)
         )
     ),
   async execute(interaction) {
-    const category = interaction.options.getString("category") ?? "main";
+    const category = interaction.options.getSubcommand();
+    const itemsData = loadItems();
 
     try {
       const profile = await moneys.findOne({ userId: interaction.user.id });
-
       const cat = profile.cat[0];
 
       if (category === "main") {
@@ -86,7 +110,36 @@ module.exports = {
 
         interaction.reply({ embeds: [embed] });
       } else if (category === "inventory") {
-        // ...
+        const page = interaction.options.getInteger("page") ?? 1;
+        const inventory = profile.inventory;
+
+        const { paginatedItems, totalPages } = paginateItems(
+          inventory,
+          page,
+          ITEMS_PER_PAGE
+        );
+
+        const embed = new EmbedBuilder()
+          .setColor("Yellow")
+          .setTitle(`${interaction.user.username}'s Inventory`)
+          .setFooter({ text: `Page ${page} of ${totalPages}` });
+
+        if (paginatedItems.length === 0) {
+          embed.setDescription("No items in inventory!");
+        } else {
+          paginatedItems.forEach((item) => {
+            const itemData = itemsData[item.name];
+            if (itemData) {
+              embed.addFields({
+                name: `${itemData.emoji} ${item.name} - ${item.amount}`,
+                value: `${itemData.type}`,
+                inline: true,
+              });
+            }
+          });
+        }
+
+        interaction.reply({ embeds: [embed] });
       }
     } catch (err) {
       console.log(err);

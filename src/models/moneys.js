@@ -21,6 +21,7 @@ const economySchema = new mongoose.Schema({
   bankTier: { type: Number, default: 1 },
   gamblingPass: { type: Boolean, default: false },
   lastInterest: { type: Date, default: null },
+  lastDaily: { type: Date, default: null },
 });
 
 const disabledSchema = new mongoose.Schema({
@@ -34,6 +35,7 @@ const moneySchema = new mongoose.Schema({
   inventory: { type: Array, default: [] },
   cat: [catSchema],
   disabled: disabledSchema,
+  created: { type: Date, default: Date.now() },
 });
 
 module.exports = mongoose.model("moneys", moneySchema);

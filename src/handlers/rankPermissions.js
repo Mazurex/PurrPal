@@ -1,4 +1,3 @@
-const moneys = require("../models/moneys");
 const rankPermissions = {
   Noob: [],
   Media: [],
@@ -6,21 +5,17 @@ const rankPermissions = {
   Mod: ["Admin"],
 };
 
-async function hasPermission(interaction, category) {
-  try {
-    const profiles = await moneys.findOne({ userId: interaction.user.id });
+// Define rank names
+const rankNames = {
+  0: "Noob",
+  1: "Media",
+  2: "Dev",
+  3: "Mod",
+};
 
-    if (!profiles) {
-      return;
-    }
-
-    const rank = profiles.rank;
-
-    const rankName = rankNames[rank];
-    return rankPermissions[rankName]?.includes(category);
-  } catch (err) {
-    console.error(err);
-  }
+function hasPermission(rank, category) {
+  const rankName = rankNames[rank];
+  return rankPermissions[rankName]?.includes(category);
 }
 
 module.exports = {

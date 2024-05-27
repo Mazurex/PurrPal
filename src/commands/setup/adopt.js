@@ -74,6 +74,8 @@ module.exports = {
           cat: [],
           disabledRobing: false,
           rank: 0,
+          created: Date.now(),
+          disabled: { disabledRobbing: false },
         });
       }
 

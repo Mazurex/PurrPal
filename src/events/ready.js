@@ -19,6 +19,9 @@ module.exports = {
             guilds: [],
             totalGuilds: totalGuilds,
             totalCats: totalCats,
+            reviews: [],
+            totalRobberies: 0,
+            totalStole: 0,
           },
         },
         { upsert: true, new: true }

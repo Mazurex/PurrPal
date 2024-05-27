@@ -1,0 +1,38 @@
+{
+    "apple": {
+      "emoji": "🍎",
+      "price": 10,
+      "description": "A juicy red apple",
+      "type": "Food"
+    },
+    "banana": {
+      "emoji": "🍌",
+      "price": 5,
+      "description": "A ripe yellow banana",
+      "type": "Food"
+    },
+    "cherry": {
+      "emoji": "🍒",
+      "price": 15,
+      "description": "A bunch of cherries",
+      "type": "Food"
+    },
+    "star": {
+      "emoji": "⭐",
+      "price": 15,
+      "description": "A bright star",
+      "type": "idk"
+  },
+  "otherstar": {
+    "emoji": "⭐",
+    "price": 15,
+    "description": "Another bright star",
+    "type": "idk"
+  },
+  "thirdstar": {
+    "emoji": "⭐",
+    "price": 15,
+    "description": "A third bright star",
+    "type": "idk"
+  }
+}
