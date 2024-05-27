@@ -15,11 +15,20 @@ const applyInterest = async (userId) => {
     if (realInterestRate <= 0) realInterestRate = 1;
 
     const now = new Date();
-    const lastInterest = profile.economy.lastInterest ?? new Date(0);
-    const diffTime = Math.abs(now - lastInterest);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    let lastInterest = profile.economy.lastInterest;
 
-    if (diffDays >= 1 && profile.economy.bank > 0) {
+    if (!lastInterest) {
+      // If lastInterest is null, set it to now and return without applying interest
+      profile.economy.lastInterest = now;
+      await profile.save();
+      return 0;
+    }
+
+    const diffTime = Math.abs(now - lastInterest);
+    const diffHours = diffTime / (1000 * 60 * 60);
+
+    // Check if 24 hours have passed
+    if (diffHours >= 24 && profile.economy.bank > 0) {
       const interest = Math.floor(profile.economy.bank * realInterestRate);
 
       if (
