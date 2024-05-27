@@ -21,11 +21,24 @@ module.exports = {
       const globalStuff = await global.findOne({});
       const cat = profile.cat[0];
 
+      if (profile.disabledRobing) {
+        return interaction.reply({
+          content: `You have disabled robbing on your profile, if you wish to enable it, use the \`/settings\` command!`,
+        });
+      }
+
       if (!targetProfile)
         return interaction.reply({
           content: "This user does not have a cat!",
           ephemeral: true,
         });
+
+      if (targetProfile.disabledRobing) {
+        return interaction.reply({
+          content: "This user has disabled robbing!",
+          ephemeral: true,
+        });
+      }
 
       if (targetProfile.economy.coins <= 0)
         return interaction.reply({

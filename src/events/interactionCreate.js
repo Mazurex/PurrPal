@@ -2,6 +2,7 @@ const { cooldowns, handleCooldown } = require("../handlers/cooldownHandler");
 const checkProfile = require("../middleware/checkProfile");
 const moneys = require("../models/moneys");
 const LevellingHandler = require("../handlers/levellingHandler");
+const rankPermissions = require("../handlers/rankPermissions");
 
 module.exports = {
   name: "interactionCreate",
@@ -13,6 +14,16 @@ module.exports = {
 
     const hasProfile = await checkProfile(interaction, command);
     if (!hasProfile) return;
+
+    if (
+      command.category === "admin" &&
+      rankPermissions.hasPermission(interaction, "Admin")
+    ) {
+      return interaction.reply({
+        content: "You do not have the permissions to use this command!",
+        ephemeral: true,
+      });
+    }
 
     const cooldown = handleCooldown(command, interaction.user, cooldowns);
     if (cooldown > 0) {

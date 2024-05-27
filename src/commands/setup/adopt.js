@@ -72,6 +72,8 @@ module.exports = {
           economy: { coins: 0, bank: 0 }, // Initialize economy field
           inventory: [],
           cat: [],
+          disabledRobing: false,
+          rank: 0,
         });
       }
 
@@ -86,32 +88,41 @@ module.exports = {
       await profile.save();
 
       let globalData = await Global.findOne();
-      if (!globalData) {
-        globalData = new Global();
-      }
 
       globalData.totalCats += 1;
       await globalData.save();
+
+      const cat = profile.cat[0];
 
       const adoptionEmbed = new EmbedBuilder()
         .setColor("Aqua")
         .setTitle(`${interaction.user.username}'s adoption complete🐱`)
         .setDescription(
-          "Congrats on adopting a cat! Each cat is unique and comes with its own base skills!"
+          `Congrats on adopting \`${cat.name}\`! Each cat is unique and comes with its own base skills`
         )
         .setFooter({
           text: "Tip: use the `/guide` command to learn how to earn money and levels!",
         })
         .setTimestamp();
 
-      const cat = profile.cat[0];
-      Object.keys(cat.skills).forEach((skill) => {
-        adoptionEmbed.addFields({
-          name: skill.charAt(0).toUpperCase() + skill.slice(1),
-          value: cat.skills[skill].toString(),
+      adoptionEmbed.addFields(
+        {
+          name: "Strength",
+          value: cat.skills.strength.toString(),
           inline: true,
-        });
-      });
+        },
+        {
+          name: "Cuteness",
+          value: cat.skills.cuteness.toString(),
+          inline: true,
+        },
+        { name: "Agility", value: cat.skills.agility.toString(), inline: true },
+        {
+          name: "Intelligence",
+          value: cat.skills.intelligence.toString(),
+          inline: true,
+        }
+      );
 
       await interaction.reply({ embeds: [adoptionEmbed] });
     } catch (err) {

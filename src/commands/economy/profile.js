@@ -2,6 +2,13 @@ const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const moneys = require("../../models/moneys");
 const bankTier = require("../../handlers/bankTier");
 
+const rankEmojis = {
+  0: "<:noob1:1244599324369752177><:noob2:1244599350110191709><:noob3:1244599328534958172>",
+  1: "<:media1:1244599316236996628><:media2:1244599318560903279><:media3:1244599319642898444>",
+  2: "<:dev1:1244599313028616273><:dev2:1244599314890620958>",
+  3: "<:mod1:1244599320989274142><:mod2:1244599322243498064><:mod3:1244599323367313439>",
+};
+
 module.exports = {
   cooldown: 5,
   data: new SlashCommandBuilder()
@@ -28,7 +35,9 @@ module.exports = {
       if (category === "main") {
         const embed = new EmbedBuilder()
           .setColor("Green")
-          .setTitle(`${interaction.user.username}'s profile`)
+          .setTitle(
+            `${interaction.user.username}'s profile ${rankEmojis[profile.rank]}`
+          )
           .addFields(
             {
               name: "Balance",

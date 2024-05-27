@@ -15,7 +15,7 @@ const applyInterest = async (userId) => {
     if (realInterestRate <= 0) realInterestRate = 1;
 
     const now = new Date();
-    const lastInterest = profile.lastInterest ?? new Date(0);
+    const lastInterest = profile.economy.lastInterest ?? new Date(0);
     const diffTime = Math.abs(now - lastInterest);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
@@ -30,7 +30,7 @@ const applyInterest = async (userId) => {
       } else {
         profile.economy.bank += interest;
       }
-      profile.lastInterest = now;
+      profile.economy.lastInterest = now;
       await profile.save();
 
       return interest;
