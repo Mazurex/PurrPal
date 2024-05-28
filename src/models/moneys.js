@@ -17,6 +17,7 @@ const catSchema = new mongoose.Schema({
 
 const economySchema = new mongoose.Schema({
   coins: { type: Number, default: 0 },
+  totalCoins: { type: Number, default: 0 },
   bank: { type: Number, default: 0 },
   bankTier: { type: Number, default: 1 },
   gamblingPass: { type: Boolean, default: false },

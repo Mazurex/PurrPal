@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const moneys = require("../../models/moneys");
 const global = require("../../models/global");
+const { REVIEW_REWARD } = require("../../settings.json");
 
 module.exports = {
   cooldown: 5,
@@ -92,7 +93,8 @@ module.exports = {
       });
 
       // Update user's coins
-      profile.economy.coins += 5000;
+      profile.economy.coins += REVIEW_REWARD;
+      profile.economy.totalCoins += REVIEW_REWARD;
       await profile.save();
     } catch (err) {
       interaction.reply({

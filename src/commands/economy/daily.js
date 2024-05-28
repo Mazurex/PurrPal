@@ -43,6 +43,7 @@ module.exports = {
 
       // Update user's coins and lastDaily date
       profile.economy.coins += totalAmount;
+      profile.economy.totalCoins += totalAmount;
       profile.economy.lastDaily = now;
 
       await profile.save();

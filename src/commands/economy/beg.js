@@ -44,6 +44,7 @@ module.exports = {
 
       // Update user's coins
       profile.economy.coins += totalCoinAmount;
+      profile.economy.totalCoins += totalCoinAmount;
 
       await profile.save();
 

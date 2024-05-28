@@ -76,13 +76,14 @@ module.exports = {
 
       // Update user's coins
       profile.economy.coins = profile.economy.coins - amount + winnings;
+      profile.economy.totalCoins = profile.economy.coins - amount + winnings;
       await profile.save();
 
       // Determine result message
       const resultMessage =
         netResult >= 0
           ? `You won ${netResult} coins!`
-          : `You lost all your coins!`;
+          : `You lost your bet coins!`;
 
       // Create the response embed
       const embed = new EmbedBuilder()

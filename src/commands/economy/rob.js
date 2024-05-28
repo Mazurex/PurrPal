@@ -57,6 +57,7 @@ module.exports = {
         const amountToSteal = Math.floor(Math.random() * stealable) + 1;
 
         profile.economy.coins += amountToSteal;
+        profile.economy.totalCoins += amountToSteal;
         targetProfile.economy.coins -= amountToSteal;
         globalStuff.totalStole += amountToSteal;
         globalStuff.totalRobberies++;

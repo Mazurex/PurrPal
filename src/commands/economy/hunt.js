@@ -29,6 +29,7 @@ module.exports = {
       }
 
       profile.economy.coins += reward;
+      profile.economy.totalCoins += reward;
       await profile.save();
 
       const embed = new EmbedBuilder()
