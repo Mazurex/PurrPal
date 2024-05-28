@@ -1,0 +1,26 @@
+{
+    "special_sword": {
+      "emoji": "⚔️",
+      "description": "A sword with magical properties. Cannot be purchased.",
+      "type": "Weapon",
+      "rarity": "Legendary"
+    },
+    "ancient_scroll": {
+      "emoji": "📜",
+      "description": "An ancient scroll containing forgotten knowledge. Cannot be purchased.",
+      "type": "Scroll",
+      "rarity": "Epic"
+    },
+    "mystic_amulet": {
+      "emoji": "🧿",
+      "description": "An amulet with mystic powers. Cannot be purchased.",
+      "type": "Amulet",
+      "rarity": "Rare"
+    },
+    "phoenix_feather": {
+      "emoji": "🪶",
+      "description": "A feather from a phoenix. Cannot be purchased.",
+      "type": "Material",
+      "rarity": "Rare"
+    }
+  }

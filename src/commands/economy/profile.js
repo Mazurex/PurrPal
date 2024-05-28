@@ -3,7 +3,7 @@ const moneys = require("../../models/moneys");
 const bankTier = require("../../handlers/bankTier");
 const loadItems = require("../../handlers/loadItems");
 
-const ITEMS_PER_PAGE = 5;
+const { ITEMS_PER_PAGE } = require("../../settings.json");
 
 const rankEmojis = {
   0: "<:noob1:1244599324369752177><:noob2:1244599350110191709><:noob3:1244599328534958172>",
