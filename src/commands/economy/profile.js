@@ -3,6 +3,7 @@ const moneys = require("../../models/moneys");
 const global = require("../../models/global");
 const bankTier = require("../../handlers/bankTier");
 const loadItems = require("../../handlers/loadItems");
+const { getRankDisplay } = require("../../handlers/rankHandler");
 
 const { ITEMS_PER_PAGE } = require("../../settings.json");
 
@@ -69,13 +70,13 @@ module.exports = {
     try {
       const profile = await moneys.findOne({ userId: target });
       const globalData = await global.findOne();
-      const rank = globalData.userRanks.find((rank) => rank.userId === target);
+      const rankDisplay = await getRankDisplay(interaction.user.id);
       const cat = profile.cat[0];
 
       if (category === "main") {
         const embed = new EmbedBuilder()
           .setColor("Green")
-          .setTitle(`${interaction.user.username}'s profile ${rank.display}`)
+          .setTitle(`${interaction.user.username}'s profile ${rankDisplay}`)
           .addFields(
             {
               name: "Balance",

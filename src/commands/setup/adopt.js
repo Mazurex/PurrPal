@@ -91,7 +91,13 @@ module.exports = {
 
       await profile.save();
 
-      giveRank(interaction.user.id, 1);
+      if (
+        globalData.userRanks.findIndex(
+          (rank) => rank.userId === interaction.user.id
+        ) === -1
+      ) {
+        giveRank(interaction.user.id, 1);
+      }
 
       globalData.totalCats += 1;
       await globalData.save();

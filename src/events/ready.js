@@ -25,6 +25,7 @@ module.exports = {
             userRanks: [],
             banned: [],
             bannedGuild: [],
+            lastUpdate: null,
           },
         },
         { upsert: true, new: true }

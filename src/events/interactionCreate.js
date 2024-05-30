@@ -1,6 +1,7 @@
 const { cooldowns, handleCooldown } = require("../handlers/cooldownHandler");
 const checkProfile = require("../middleware/checkProfile");
 const moneys = require("../models/moneys");
+const global = require("../models/global");
 const LevellingHandler = require("../handlers/levellingHandler");
 const { logging } = require("../handlers/loggingHandler");
 
@@ -14,6 +15,30 @@ module.exports = {
 
     const hasProfile = await checkProfile(interaction, command);
     if (!hasProfile) return;
+
+    const globalData = await global.findOne();
+    const userRankEntry = globalData.userRanks.find(
+      (rank) => rank.userId === interaction.user.id
+    );
+    const userRank = userRankEntry ? userRankEntry.rank : 0; // Default to 0 if no rank is found
+
+    const rankRequirements = {
+      mod: [3, 4], // MOD, DEV
+      admin: [4], // DEV
+      economy: [1, 2, 3, 4], // MEMBER, MEDIA, MOD, DEV
+      util: [1, 2, 3, 4], // MEMBER, MEDIA, MOD, DEV
+      fun: [1, 2, 3, 4], // MEMBER, MEDIA, MOD, DEV
+    };
+
+    if (
+      rankRequirements[command.category] &&
+      !rankRequirements[command.category].includes(userRank)
+    ) {
+      return interaction.reply({
+        content: `You do not have the required rank to use the commands in the \`${command.category}\` category`,
+        ephemeral: true,
+      });
+    }
 
     const cooldown = handleCooldown(command, interaction.user, cooldowns);
     if (cooldown > 0) {

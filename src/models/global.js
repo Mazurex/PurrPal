@@ -30,7 +30,6 @@ const bannedGuildSchema = new mongoose.Schema({
 const userRankSchema = new mongoose.Schema({
   userId: { type: String, unique: true },
   rank: { type: Number, default: 0 },
-  display: { type: String, default: "" },
 });
 
 const globalSchema = new mongoose.Schema({
@@ -43,6 +42,7 @@ const globalSchema = new mongoose.Schema({
   userRanks: [userRankSchema],
   banned: [bannedSchema],
   bannedGuild: [bannedGuildSchema],
+  lastUpdate: { type: Date, default: null },
 });
 
 module.exports = mongoose.model("Global", globalSchema);
