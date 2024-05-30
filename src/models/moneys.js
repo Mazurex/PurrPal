@@ -31,7 +31,6 @@ const disabledSchema = new mongoose.Schema({
 
 const moneySchema = new mongoose.Schema({
   userId: { type: String, required: true, unique: true },
-  rank: { type: Number, default: 0 },
   economy: economySchema,
   inventory: { type: Array, default: [] },
   cat: [catSchema],

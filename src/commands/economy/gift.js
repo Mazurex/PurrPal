@@ -128,7 +128,7 @@ module.exports = {
           });
         }
 
-        userInventoryItem -= amount;
+        userInventoryItem.amount -= amount;
         if (userInventoryItem.amount === 0) {
           userProfile.inventory = userProfile.inventory.filter(
             (item) => item.name.toLowerCase() !== itemName
@@ -152,7 +152,7 @@ module.exports = {
           .setColor("Aqua")
           .setTitle(`${interaction.user.username}'s gift receipt`)
           .setDescription(
-            `Successfully gifted \`${itemAmount} ${itemName}\` to ${target.username}`
+            `Successfully gifted \`${amount} ${itemName}\` to ${target.username}`
           )
           .setTimestamp();
 

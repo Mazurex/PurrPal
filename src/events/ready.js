@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-const global = require("../models/global");
+const Global = require("../models/global");
 const moneys = require("../models/moneys");
 
 module.exports = {
@@ -12,7 +12,7 @@ module.exports = {
       const totalGuilds = client.guilds.cache.size ?? 0;
       const totalCats = (await moneys.countDocuments({})) ?? 0;
 
-      await global.findOneAndUpdate(
+      await Global.findOneAndUpdate(
         {},
         {
           $setOnInsert: {
@@ -22,6 +22,9 @@ module.exports = {
             reviews: [],
             totalRobberies: 0,
             totalStole: 0,
+            userRanks: [],
+            banned: [],
+            bannedGuild: [],
           },
         },
         { upsert: true, new: true }

@@ -1,16 +1,10 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const moneys = require("../../models/moneys");
+const global = require("../../models/global");
 const bankTier = require("../../handlers/bankTier");
 const loadItems = require("../../handlers/loadItems");
 
 const { ITEMS_PER_PAGE } = require("../../settings.json");
-
-const rankEmojis = {
-  0: "<:noob1:1244599324369752177><:noob2:1244599350110191709><:noob3:1244599328534958172>",
-  1: "<:media1:1244599316236996628><:media2:1244599318560903279><:media3:1244599319642898444>",
-  2: "<:dev1:1244599313028616273><:dev2:1244599314890620958>",
-  3: "<:mod1:1244599320989274142><:mod2:1244599322243498064><:mod3:1244599323367313439>",
-};
 
 // Function to paginate items
 const paginateItems = (items, page, itemsPerPage) => {
@@ -32,10 +26,24 @@ module.exports = {
     .setName("profile")
     .setDescription("Display your profile")
     .addSubcommand((subcommand) =>
-      subcommand.setName("main").setDescription("The main profile information")
+      subcommand
+        .setName("main")
+        .setDescription("The main profile information")
+        .addUserOption((option) =>
+          option
+            .setName("target")
+            .setDescription("View a specific persons profile")
+        )
     )
     .addSubcommand((subcommand) =>
-      subcommand.setName("skills").setDescription("Your cat's skills")
+      subcommand
+        .setName("skills")
+        .setDescription("Your cat's skills")
+        .addUserOption((option) =>
+          option
+            .setName("target")
+            .setDescription("View a specific persons profile")
+        )
     )
     .addSubcommand((subcommand) =>
       subcommand
@@ -47,21 +55,27 @@ module.exports = {
             .setDescription("The page number of the inventory")
             .setRequired(false)
         )
+        .addUserOption((option) =>
+          option
+            .setName("target")
+            .setDescription("View a specific persons profile")
+        )
     ),
   async execute(interaction) {
     const category = interaction.options.getSubcommand();
+    const target = interaction.options.getUser("target") ?? interaction.user.id;
     const itemsData = loadItems();
 
     try {
-      const profile = await moneys.findOne({ userId: interaction.user.id });
+      const profile = await moneys.findOne({ userId: target });
+      const globalData = await global.findOne();
+      const rank = globalData.userRanks.find((rank) => rank.userId === target);
       const cat = profile.cat[0];
 
       if (category === "main") {
         const embed = new EmbedBuilder()
           .setColor("Green")
-          .setTitle(
-            `${interaction.user.username}'s profile ${rankEmojis[profile.rank]}`
-          )
+          .setTitle(`${interaction.user.username}'s profile ${rank.display}`)
           .addFields(
             {
               name: "Balance",
@@ -83,14 +97,24 @@ module.exports = {
             {
               name: "Level",
               value: `[ ${cat.level} / 100 ]`,
-              inline: false,
+              inline: true,
             },
             {
               name: "XP",
               value: `[ ${cat.xp} / ${Math.floor(
                 (cat.level * 2 + 5) / 0.15
               )} ]`,
-              inline: false,
+              inline: true,
+            },
+            {
+              name: "Cat Name",
+              value: cat.name,
+              inline: true,
+            },
+            {
+              name: "Cat Adoption ID",
+              value: cat.id,
+              inline: true,
             }
           );
         interaction.reply({ embeds: [embed] });
@@ -98,15 +122,29 @@ module.exports = {
         const embed = new EmbedBuilder()
           .setColor("Blue")
           .setTitle(`${interaction.user.username}'s skills`)
-          .setDescription(`View the skills of ${cat.name}`);
-
-        Object.keys(cat.skills).forEach((skill) => {
-          embed.addFields({
-            name: skill.charAt(0).toUpperCase() + skill.slice(1),
-            value: cat.skills[skill].toString(),
-            inline: true,
-          });
-        });
+          .setDescription(`View the skills of \`${cat.name}\``)
+          .addFields(
+            {
+              name: "strength",
+              value: cat.skills.strength.toString(),
+              inline: true,
+            },
+            {
+              name: "cuteness",
+              value: cat.skills.cuteness.toString(),
+              inline: true,
+            },
+            {
+              name: "agility",
+              value: cat.skills.agility.toString(),
+              inline: true,
+            },
+            {
+              name: "intelligence",
+              value: cat.skills.intelligence.toString(),
+              inline: true,
+            }
+          );
 
         interaction.reply({ embeds: [embed] });
       } else if (category === "inventory") {

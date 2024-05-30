@@ -3,6 +3,7 @@ const moneys = require("../../models/moneys");
 const Global = require("../../models/global");
 const fs = require("fs");
 const path = require("path");
+const { giveRank } = require("../../handlers/rankHandler");
 
 const loadBlockedWords = () => {
   const filePath = path.join(__dirname, "..", "..", "blockedCatNames.json");
@@ -33,7 +34,6 @@ module.exports = {
     ),
   async execute(interaction) {
     const name = interaction.options.getString("name");
-    const id = `#${Math.floor(Math.random() * 1000) + 1}`;
 
     const blockedWords = loadBlockedWords();
 
@@ -56,6 +56,7 @@ module.exports = {
 
     try {
       let profile = await moneys.findOne({ userId: interaction.user.id });
+      const globalData = await Global.findOne();
 
       if (profile && profile.cat.length > 0) {
         return interaction.reply({
@@ -73,11 +74,12 @@ module.exports = {
           inventory: [],
           cat: [],
           disabledRobing: false,
-          rank: 0,
           created: Date.now(),
           disabled: { disabledRobbing: false },
         });
       }
+
+      const id = `#${globalData.totalCats}`;
 
       profile.cat.push({
         name: name,
@@ -89,7 +91,7 @@ module.exports = {
 
       await profile.save();
 
-      let globalData = await Global.findOne();
+      giveRank(interaction.user.id, 1);
 
       globalData.totalCats += 1;
       await globalData.save();
@@ -123,6 +125,11 @@ module.exports = {
           name: "Intelligence",
           value: cat.skills.intelligence.toString(),
           inline: true,
+        },
+        {
+          name: "Adoption ID",
+          value: cat.id,
+          inline: false,
         }
       );
 
