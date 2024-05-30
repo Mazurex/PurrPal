@@ -1,5 +1,7 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const { useItem } = require("../../handlers/itemHandler");
+const moneys = require("../../models/moneys");
+const items = require("../../items/items.json");
 
 module.exports = {
   cooldown: 5,

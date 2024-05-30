@@ -56,6 +56,18 @@ module.exports = {
             .setRequired(true)
             .setMaxLength(32)
         )
+    )
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName("sell")
+        .setDescription("Sell an item in your inventory for 60% of it's price!")
+        .addStringOption((option) =>
+          option
+            .setName("item")
+            .setDescription("What item do you want to use")
+            .setMaxLength(35)
+            .setRequired(true)
+        )
     ),
   async execute(interaction) {
     const subcommand = interaction.options.getSubcommand();
@@ -159,6 +171,44 @@ module.exports = {
 
         interaction.reply({
           content: `You have successfully bought ${item.emoji} ${itemName} for ${item.price} coins!`,
+        });
+      } else if (subcommand === "sell") {
+        const itemName = interaction.options.getString("item").toLowerCase();
+        const item = itemsData[itemName];
+
+        if (!item) {
+          return interaction.reply({
+            content: `Item "${itemName}" not found in your inventory.`,
+            ephemeral: true,
+          });
+        }
+
+        const inventoryItem = profile.inventory.find(
+          (invItem) => invItem.name === itemName
+        );
+
+        if (!inventoryItem || inventoryItem.amount <= 0) {
+          return interaction.reply({
+            content: `You do not have any "${itemName}" to sell.`,
+            ephemeral: true,
+          });
+        }
+
+        const sellPrice = item.price * 0.6;
+
+        profile.economy.coins += sellPrice;
+        inventoryItem.amount -= 1;
+
+        if (inventoryItem.amount <= 0) {
+          profile.inventory = profile.inventory.filter(
+            (invItem) => invItem.name !== itemName
+          );
+        }
+
+        await profile.save();
+
+        interaction.reply({
+          content: `You have successfully sold ${item.emoji} ${itemName} for ${sellPrice} coins!`,
         });
       }
     } catch (err) {
