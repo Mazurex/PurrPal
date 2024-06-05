@@ -5,7 +5,8 @@ module.exports = {
   cooldown: 5,
   data: new SlashCommandBuilder()
     .setName("hunt")
-    .setDescription("Hunt for a chance of winning some coins!"),
+    .setDescription("Hunt for a chance of winning some coins!")
+    .setDMPermission(false),
   async execute(interaction) {
     try {
       const profile = await moneys.findOne({ userId: interaction.user.id });

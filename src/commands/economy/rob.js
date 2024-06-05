@@ -3,10 +3,11 @@ const moneys = require("../../models/moneys");
 const global = require("../../models/global");
 
 module.exports = {
-  cooldown: 2160,
+  cooldown: 0,
   data: new SlashCommandBuilder()
     .setName("rob")
     .setDescription("Steal some money from a different use")
+    .setDMPermission(false)
     .addUserOption((option) =>
       option
         .setName("target")
@@ -21,9 +22,17 @@ module.exports = {
       const globalStuff = await global.findOne({});
       const cat = profile.cat[0];
 
-      if (profile.disabledRobing) {
+      if (profile.disabled.disabledRobbing) {
         return interaction.reply({
           content: `You have disabled robbing on your profile, if you wish to enable it, use the \`/settings\` command!`,
+          ephemeral: true,
+        });
+      }
+
+      if (targetProfile.disabled.disabledRobbing) {
+        return interaction.reply({
+          content: "This user has disabled robbing on their profile!",
+          ephemeral: true,
         });
       }
 
@@ -32,13 +41,6 @@ module.exports = {
           content: "This user does not have a cat!",
           ephemeral: true,
         });
-
-      if (targetProfile.disabledRobing) {
-        return interaction.reply({
-          content: "This user has disabled robbing!",
-          ephemeral: true,
-        });
-      }
 
       if (targetProfile.economy.coins <= 0)
         return interaction.reply({
@@ -87,7 +89,7 @@ module.exports = {
           .setColor("Red")
           .setTitle(`${interaction.user.username}'s robbery result`)
           .setDescription(
-            `${interaction.user} has stole \`0\` coins from ${target}`
+            `${interaction.user} has attemped to steal from ${target} however they missed!`
           )
           .setTimestamp();
         interaction.reply({ embeds: [embed] });

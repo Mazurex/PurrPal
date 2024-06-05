@@ -8,6 +8,16 @@ const {
 
 const global = require("../../models/global");
 
+// Rank names mapping
+const rankNames = {
+  0: "Banned",
+  1: "Member",
+  2: "Media",
+  3: "Mod",
+  4: "Dev",
+  5: "Owner",
+};
+
 module.exports = {
   cooldown: 5,
   data: new SlashCommandBuilder()
@@ -44,7 +54,20 @@ module.exports = {
         .addUserOption((option) =>
           option
             .setName("target")
-            .setDescription("who should this rank be given to")
+            .setDescription("Who should this rank be removed from")
+            .setRequired(true)
+        )
+        .addIntegerOption((option) =>
+          option
+            .setName("rank")
+            .setDescription("What rank should be removed")
+            .addChoices(
+              { name: "Banned", value: 0 },
+              { name: "Member", value: 1 },
+              { name: "Media", value: 2 },
+              { name: "Mod", value: 3 },
+              { name: "Dev", value: 4 }
+            )
             .setRequired(true)
         )
     )
@@ -55,14 +78,16 @@ module.exports = {
 
     try {
       const globalData = await global.findOne();
-      if (subcommand === "give") {
-        const rank = interaction.options.getInteger("rank");
+      const userRankEntry = globalData.userRanks.find(
+        (userRank) => userRank.userId === target.id
+      );
 
-        const userRankEntry = globalData.userRanks.find(
-          (userRank) => userRank.userId === target.id
-        );
-
-        if (userRankEntry && userRankEntry.rank === 4) {
+      if (
+        !globalData.userRanks.find(
+          (userRank) => userRank.userId === interaction.user.id
+        )
+      ) {
+        if (userRankEntry && userRankEntry.ranks.includes(4)) {
           return interaction.reply({
             content: "I cannot change the rank of this user!",
             ephemeral: true,
@@ -75,56 +100,44 @@ module.exports = {
             ephemeral: true,
           });
         }
+      }
 
+      if (subcommand === "give") {
+        const rank = interaction.options.getInteger("rank");
         await giveRank(target.id, rank);
-        const display = await getRankDisplay(target.id);
 
         interaction.reply({
-          content: `I have given the ${display} rank to ${target.username}`,
+          content: `I have given the ${rankNames[rank]} rank to ${target.username}`,
           ephemeral: true,
         });
 
         try {
           target.send({
-            content: `You have been given the ${display} rank for PurrPal!`,
+            content: `You have been given the ${rankNames[rank]} rank for PurrPal!`,
           });
         } catch {}
       } else if (subcommand === "remove") {
-        const userRankEntry = globalData.userRanks.find(
-          (userRank) => userRank.userId === target.id
-        );
+        const rank = interaction.options.getInteger("rank");
+        await removeRank(target.id, rank);
 
-        if (userRankEntry && userRankEntry.rank === 4) {
-          return interaction.reply({
-            content: "I cannot change the rank of this user!",
-            ephemeral: true,
-          });
-        }
-
-        if (target.bot || target === interaction.user) {
-          return interaction.reply({
-            content: "I cannot change the rank of this user!",
-            ephemeral: true,
-          });
-        }
-
-        await removeRank(target.id);
+        const display = await getRankDisplay(target.id);
         interaction.reply({
-          content: `I have resetted ${target.username}'s rank!`,
+          content: `I have removed the ${rankNames[rank]} rank from ${target.username}. Current rank(s): ${display}`,
           ephemeral: true,
         });
 
         try {
           target.send({
-            content: `Your rank has been resetted to ${getRankDisplay(
-              target.id
-            )} for PurrPal!`,
+            content: `Your ${rankNames[rank]} rank has been removed. Current rank(s): ${display} for PurrPal!`,
           });
         } catch {}
       }
     } catch (err) {
       console.error(err);
-      interaction.reply("There was an error with posting an update");
+      interaction.reply({
+        content: "There was an error with posting an update",
+        ephemeral: true,
+      });
     }
   },
 };

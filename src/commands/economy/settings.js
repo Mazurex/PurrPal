@@ -6,37 +6,26 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("settings")
     .setDescription("Hunt for a chance of winning some coins!")
-    .addStringOption((option) =>
-      option
-        .setName("option")
-        .setDescription("What setting do you want to change")
-        .setRequired(true)
-        .addChoices({ name: "Disable Robbery", value: "disable_rob" })
-    )
-    .addStringOption((option) =>
-      option
-        .setName("value")
-        .setDescription("The value of the rule you want to change")
+    .addSubcommand((subcommand) =>
+      subcommand
+        .setName("robbing")
+        .setDescription("Do you want to disable/enable robbing (passive mode)")
+        .addBooleanOption((option) =>
+          option
+            .setName("value")
+            .setDescription("False = robbing disabled")
+            .setRequired(true)
+        )
     ),
   async execute(interaction) {
-    const option = interaction.options.getString("option");
-    const value = interaction.optinos.getString("value").toLowerCase();
+    const subcommand = interaction.options.getSubcommand();
 
-    try {
-      const profile = await moneys.findOne({ userId: interaction.user.id });
+    if (subcommand === "robbing") {
+      const value = interaction.options.getBoolean("value");
+      try {
+        const profile = await moneys.findOne({ userId: interaction.user.id });
 
-      if (option === "disable_rob") {
-        const TrueOptions = ["true", "t"];
-        const FalseOptions = ["false", "f"];
-
-        if (value != TrueOptions || value != FalseOptions) {
-          return interaction.reply({
-            content: "Please set the value to the correct format!",
-            ephemeral: true,
-          });
-        }
-
-        if (value === TrueOptions) {
+        if (value === false) {
           profile.disabled.disabledRobbing = true;
           interaction.reply({
             content: `I have disabled robbing for your profile!`,
@@ -49,13 +38,13 @@ module.exports = {
         }
 
         await profile.save();
+      } catch (err) {
+        interaction.reply({
+          content: "Error with settings command",
+          ephemeral: true,
+        });
+        console.log(err);
       }
-    } catch (err) {
-      interaction.reply({
-        content: "Error with settings command",
-        ephemeral: true,
-      });
-      console.log(err);
     }
   },
 };

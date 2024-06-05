@@ -33,7 +33,7 @@ module.exports = {
         .addUserOption((option) =>
           option
             .setName("target")
-            .setDescription("View a specific persons profile")
+            .setDescription("View a specific person's profile")
         )
     )
     .addSubcommand((subcommand) =>
@@ -43,7 +43,7 @@ module.exports = {
         .addUserOption((option) =>
           option
             .setName("target")
-            .setDescription("View a specific persons profile")
+            .setDescription("View a specific person's profile")
         )
     )
     .addSubcommand((subcommand) =>
@@ -59,24 +59,34 @@ module.exports = {
         .addUserOption((option) =>
           option
             .setName("target")
-            .setDescription("View a specific persons profile")
+            .setDescription("View a specific person's profile")
         )
     ),
   async execute(interaction) {
     const category = interaction.options.getSubcommand();
-    const target = interaction.options.getUser("target") ?? interaction.user.id;
+    const targetUser =
+      interaction.options.getUser("target") ?? interaction.user;
     const itemsData = loadItems();
 
     try {
-      const profile = await moneys.findOne({ userId: target });
+      const profile = await moneys.findOne({ userId: targetUser.id });
       const globalData = await global.findOne();
-      const rankDisplay = await getRankDisplay(interaction.user.id);
+
+      if (!profile) {
+        return interaction.reply({
+          content: "This user has not yet created a profile!",
+          ephemeral: true,
+        });
+      }
+
       const cat = profile.cat[0];
 
       if (category === "main") {
+        const { highestRank, allRanks } = await getRankDisplay(targetUser.id);
+
         const embed = new EmbedBuilder()
           .setColor("Green")
-          .setTitle(`${interaction.user.username}'s profile ${rankDisplay}`)
+          .setTitle(`${highestRank} ${targetUser.username}'s profile`)
           .addFields(
             {
               name: "Balance",
@@ -116,32 +126,36 @@ module.exports = {
               name: "Cat Adoption ID",
               value: cat.id,
               inline: true,
+            },
+            {
+              name: "Ranks",
+              value: allRanks.length ? allRanks.join(" ") : "No ranks",
+              inline: false,
             }
           );
         interaction.reply({ embeds: [embed] });
       } else if (category === "skills") {
         const embed = new EmbedBuilder()
           .setColor("Blue")
-          .setTitle(`${interaction.user.username}'s skills`)
-          .setDescription(`View the skills of \`${cat.name}\``)
+          .setTitle(`${targetUser.username}'s skills`)
           .addFields(
             {
-              name: "strength",
+              name: "Strength",
               value: cat.skills.strength.toString(),
               inline: true,
             },
             {
-              name: "cuteness",
+              name: "Cuteness",
               value: cat.skills.cuteness.toString(),
               inline: true,
             },
             {
-              name: "agility",
+              name: "Agility",
               value: cat.skills.agility.toString(),
               inline: true,
             },
             {
-              name: "intelligence",
+              name: "Intelligence",
               value: cat.skills.intelligence.toString(),
               inline: true,
             }
@@ -160,7 +174,7 @@ module.exports = {
 
         const embed = new EmbedBuilder()
           .setColor("Yellow")
-          .setTitle(`${interaction.user.username}'s Inventory`)
+          .setTitle(`${targetUser.username}'s Inventory`)
           .setFooter({ text: `Page ${page} of ${totalPages}` });
 
         if (paginatedItems.length === 0) {

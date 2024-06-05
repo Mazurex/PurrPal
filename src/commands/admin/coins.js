@@ -30,8 +30,8 @@ module.exports = {
         .setDescription("Remove coins from a user's balance")
         .addStringOption((option) =>
           option
-            .setName("userid")
-            .setDescription("The ID of the user")
+            .setName("target")
+            .setDescription("Who should be given coins")
             .setRequired(true)
         )
         .addIntegerOption((option) =>
@@ -43,15 +43,15 @@ module.exports = {
     ),
   async execute(interaction) {
     const subcommand = interaction.options.getSubcommand();
-    const userId = interaction.options.getString("userid");
+    const target = interaction.options.getString("userid");
     const amount = interaction.options.getInteger("amount");
 
     try {
-      const profile = await moneys.findOne({ userId: userId });
+      const profile = await moneys.findOne({ userId: target.id });
 
       if (!profile) {
         return interaction.reply({
-          content: `User with ID ${userId} does not exist in the database.`,
+          content: `User with ID ${target} does not exist in the database.`,
           ephemeral: true,
         });
       }
@@ -61,14 +61,14 @@ module.exports = {
         profile.economy.coins += amount;
 
         interaction.reply({
-          content: `Successfully added ${amount} coins to <@${userId}>'s balance.`,
+          content: `Successfully added ${amount} coins to ${target.username}'s balance.`,
           ephemeral: true,
         });
       } else if (subcommand === "remove") {
         // Check if the user has enough coins to remove
         if (profile.economy.coins < amount) {
           return interaction.reply({
-            content: `User with ID ${userId} does not have enough coins to remove.`,
+            content: `User ${target.username} does not have enough coins to remove.`,
             ephemeral: true,
           });
         }
@@ -77,7 +77,7 @@ module.exports = {
         profile.economy.coins -= amount;
 
         interaction.reply({
-          content: `Successfully removed ${amount} coins from <@${userId}>'s balance.`,
+          content: `Successfully removed ${amount} coins from ${target.username}'s balance.`,
           ephemeral: true,
         });
       }

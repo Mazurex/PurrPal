@@ -6,6 +6,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("gamble")
     .setDescription("Gamble your coins for a chance to win more")
+    .setDMPermission(false)
     .addIntegerOption((option) =>
       option
         .setName("amount")

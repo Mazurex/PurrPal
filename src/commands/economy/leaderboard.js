@@ -5,6 +5,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("leaderboard")
     .setDescription("View the leaderboard")
+    .setDMPermission(false)
     .addSubcommand((subcommand) =>
       subcommand
         .setName("totalcoins")

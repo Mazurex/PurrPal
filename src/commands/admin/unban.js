@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require("discord.js");
 const global = require("../../models/global");
-const { removeRank } = require("../../handlers/rankHandler");
+const { removeRank, giveRank } = require("../../handlers/rankHandler");
 
 module.exports = {
   cooldown: 5,
@@ -71,9 +71,23 @@ module.exports = {
           ephemeral: true,
         });
 
+        // Remove the banned rank from the user
+        removeRank(target.id, 0);
+
+        // Check if the user has a cat profile and give them the member rank
+        const memberRank = 1; // Assuming the member rank is 1
+        const userHasCatProfile = globalData.userRanks.some(
+          (userRank) => userRank.userId === target.id
+        );
+        if (userHasCatProfile) {
+          giveRank(target.id, memberRank);
+        }
+
         try {
-          target.send(`You have been unbanned from using PurrPal!`);
-        } catch {}
+          await target.send(`You have been unbanned from using PurrPal!`);
+        } catch (error) {
+          // Silently ignore errors when sending DMs
+        }
       } else if (subcommand === "guild") {
         const target = interaction.options.getString("target");
 
@@ -89,8 +103,6 @@ module.exports = {
         globalData.bannedGuild = globalData.bannedGuild.filter(
           (banned) => banned.guildId !== target
         );
-
-        removeRank(target.id);
 
         await globalData.save();
 

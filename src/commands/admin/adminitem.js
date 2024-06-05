@@ -14,7 +14,7 @@ module.exports = {
         .setDescription("Add items to a user's inventory")
         .addStringOption((option) =>
           option
-            .setName("userid")
+            .setName("target")
             .setDescription("The ID of the user")
             .setRequired(true)
         )
@@ -37,8 +37,8 @@ module.exports = {
         .setDescription("Remove items from a user's inventory")
         .addStringOption((option) =>
           option
-            .setName("userid")
-            .setDescription("The ID of the user")
+            .setName("target")
+            .setDescription("Who you want to give items to")
             .setRequired(true)
         )
         .addStringOption((option) =>
@@ -56,7 +56,7 @@ module.exports = {
     ),
   async execute(interaction) {
     const subcommand = interaction.options.getSubcommand();
-    const userId = interaction.options.getString("userid");
+    const target = interaction.options.getString("target");
     const itemName = interaction.options.getString("item");
     const amount = interaction.options.getInteger("amount");
 
@@ -72,11 +72,11 @@ module.exports = {
     }
 
     try {
-      const profile = await moneys.findOne({ userId: userId });
+      const profile = await moneys.findOne({ target: target });
 
       if (!profile) {
         return interaction.reply({
-          content: `User with ID ${userId} does not exist in the database.`,
+          content: `User ${target.username} does not exist in the database.`,
           ephemeral: true,
         });
       }
@@ -95,14 +95,14 @@ module.exports = {
         }
 
         interaction.reply({
-          content: `Successfully added ${amount} ${itemName}(s) to <@${userId}>'s inventory.`,
+          content: `Successfully added ${amount} ${itemName}(s) to <@${target.username}'s inventory.`,
           ephemeral: true,
         });
       } else if (subcommand === "remove") {
         // Check if the user has enough of the item to remove
         if (!existingItem || existingItem.amount < amount) {
           return interaction.reply({
-            content: `User does not have enough of the item "${itemName}" to remove.`,
+            content: `Target does not have enough of the item "${itemName}" to remove.`,
             ephemeral: true,
           });
         }
@@ -116,7 +116,7 @@ module.exports = {
         }
 
         interaction.reply({
-          content: `Successfully removed ${amount} ${itemName}(s) from <@${userId}>'s inventory.`,
+          content: `Successfully removed ${amount} ${itemName}(s) from <@${target.username}>'s inventory.`,
           ephemeral: true,
         });
       }

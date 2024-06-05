@@ -20,19 +20,23 @@ module.exports = {
     const userRankEntry = globalData.userRanks.find(
       (rank) => rank.userId === interaction.user.id
     );
-    const userRank = userRankEntry ? userRankEntry.rank : 0; // Default to 0 if no rank is found
+    const userRanks = userRankEntry ? userRankEntry.ranks : [0]; // Default to [0] if no ranks are found
 
     const rankRequirements = {
-      mod: [3, 4], // MOD, DEV
-      admin: [4], // DEV
-      economy: [1, 2, 3, 4], // MEMBER, MEDIA, MOD, DEV
-      util: [1, 2, 3, 4], // MEMBER, MEDIA, MOD, DEV
-      fun: [1, 2, 3, 4], // MEMBER, MEDIA, MOD, DEV
+      mod: [3, 4, 5],
+      admin: [4, 5],
+      economy: [1, 2, 3, 4, 5],
+      util: [1, 2, 3, 4, 5],
+      fun: [1, 2, 3, 4, 5],
+    };
+
+    const hasRequiredRank = (requiredRanks, userRanks) => {
+      return requiredRanks.some((rank) => userRanks.includes(rank));
     };
 
     if (
       rankRequirements[command.category] &&
-      !rankRequirements[command.category].includes(userRank)
+      !hasRequiredRank(rankRequirements[command.category], userRanks)
     ) {
       return interaction.reply({
         content: `You do not have the required rank to use the commands in the \`${command.category}\` category`,

@@ -22,6 +22,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("shop")
     .setDescription("View the shop, a specific item, or buy something")
+    .setDMPermission(false)
     .addSubcommand((subcommand) =>
       subcommand
         .setName("view")

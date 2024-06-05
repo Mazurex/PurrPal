@@ -5,7 +5,8 @@ module.exports = {
   cooldown: 5,
   data: new SlashCommandBuilder()
     .setName("beg")
-    .setDescription("Beg for coins"),
+    .setDescription("Beg for coins")
+    .setDMPermission(false),
   async execute(interaction) {
     try {
       const profile = await moneys.findOne({ userId: interaction.user.id });

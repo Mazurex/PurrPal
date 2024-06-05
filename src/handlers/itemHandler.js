@@ -1,5 +1,6 @@
 const path = require("path");
 const moneys = require("../models/moneys");
+const { max_skills_value } = require("../settings.json");
 
 module.exports.useItem = async (itemName, interaction) => {
   try {
@@ -32,15 +33,16 @@ module.exports.useItem = async (itemName, interaction) => {
     const item = require(itemPath);
 
     if (item && typeof item.use === "function") {
-      await item.use(interaction);
-
-      profile.inventory[itemIndex].amount -= 1;
-
-      if (profile.inventory[itemIndex].amount <= 0) {
-        profile.inventory.splice(itemIndex, 1);
+      const maxSkillReached = await item.checkMaxSkill(profile);
+      if (maxSkillReached) {
+        await interaction.reply({
+          content: `Your skill is already at its maximum value. You cannot use \`${itemName}\`.`,
+          ephemeral: true,
+        });
+        return;
       }
 
-      await profile.save();
+      await item.use(interaction, itemIndex);
     } else {
       throw new Error(
         `The item "${itemName}" does not have a valid use function.`

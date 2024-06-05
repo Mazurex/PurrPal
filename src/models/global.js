@@ -29,7 +29,7 @@ const bannedGuildSchema = new mongoose.Schema({
 
 const userRankSchema = new mongoose.Schema({
   userId: { type: String, unique: true },
-  rank: { type: Number, default: 0 },
+  ranks: { type: [Number], default: [] },
 });
 
 const globalSchema = new mongoose.Schema({

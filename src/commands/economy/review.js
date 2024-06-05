@@ -8,6 +8,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("review")
     .setDescription("Leave a review about the bot and earn 5000 coins!")
+    .setDMPermission(false)
     .addIntegerOption((option) =>
       option
         .setName("stars")

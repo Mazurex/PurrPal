@@ -5,7 +5,8 @@ module.exports = {
   cooldown: 10, // 24 hours cooldown
   data: new SlashCommandBuilder()
     .setName("daily")
-    .setDescription("Get free daily coins!"),
+    .setDescription("Get free daily coins!")
+    .setDMPermission(false),
   async execute(interaction) {
     try {
       const profile = await moneys.findOne({ userId: interaction.user.id });

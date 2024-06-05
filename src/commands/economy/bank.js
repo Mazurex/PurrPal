@@ -13,6 +13,7 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName("bank")
     .setDescription("Show your bank data")
+    .setDMPermission(false)
     .addSubcommand((subcommand) =>
       subcommand
         .setName("view")
