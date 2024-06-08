@@ -85,9 +85,7 @@ module.exports = {
 
         try {
           await target.send(`You have been unbanned from using PurrPal!`);
-        } catch (error) {
-          // Silently ignore errors when sending DMs
-        }
+        } catch (error) {}
       } else if (subcommand === "guild") {
         const target = interaction.options.getString("target");
 

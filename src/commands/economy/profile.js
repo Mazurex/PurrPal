@@ -21,6 +21,21 @@ const paginateItems = (items, page, itemsPerPage) => {
   };
 };
 
+// Function to aggregate items
+const aggregateItems = (inventory) => {
+  const aggregatedItems = {};
+
+  inventory.forEach((item) => {
+    if (aggregatedItems[item.name]) {
+      aggregatedItems[item.name].amount += item.amount;
+    } else {
+      aggregatedItems[item.name] = { ...item };
+    }
+  });
+
+  return Object.values(aggregatedItems);
+};
+
 module.exports = {
   cooldown: 5,
   data: new SlashCommandBuilder()
@@ -164,10 +179,10 @@ module.exports = {
         interaction.reply({ embeds: [embed] });
       } else if (category === "inventory") {
         const page = interaction.options.getInteger("page") ?? 1;
-        const inventory = profile.inventory;
+        const aggregatedInventory = aggregateItems(profile.inventory);
 
         const { paginatedItems, totalPages } = paginateItems(
-          inventory,
+          aggregatedInventory,
           page,
           ITEMS_PER_PAGE
         );

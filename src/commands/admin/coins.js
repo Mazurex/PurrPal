@@ -11,9 +11,9 @@ module.exports = {
       subcommand
         .setName("add")
         .setDescription("Add coins to a user's balance")
-        .addStringOption((option) =>
+        .addUserOption((option) =>
           option
-            .setName("userid")
+            .setName("target")
             .setDescription("The ID of the user")
             .setRequired(true)
         )
@@ -43,7 +43,7 @@ module.exports = {
     ),
   async execute(interaction) {
     const subcommand = interaction.options.getSubcommand();
-    const target = interaction.options.getString("userid");
+    const target = interaction.options.getUser("target");
     const amount = interaction.options.getInteger("amount");
 
     try {
@@ -51,7 +51,7 @@ module.exports = {
 
       if (!profile) {
         return interaction.reply({
-          content: `User with ID ${target} does not exist in the database.`,
+          content: `User ${target.username} does not exist in the database.`,
           ephemeral: true,
         });
       }

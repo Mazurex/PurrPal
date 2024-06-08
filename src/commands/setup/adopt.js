@@ -73,9 +73,8 @@ module.exports = {
           economy: { coins: 0, bank: 0, totalCoins: 0 }, // Initialize economy field
           inventory: [],
           cat: [],
-          disabledRobing: false,
           created: Date.now(),
-          disabled: { disabledRobbing: false },
+          settings: { robbing: true, gifting: true },
         });
       }
 

@@ -5,7 +5,7 @@
       "description": "Increases your strength skill by +1",
       "type": "Consumable"
     },
-    "Cat Hat": {
+    "cat hat": {
       "emoji": "<:cat_hat:1245995163520598097>",
       "price": 20000,
       "description": "Increases your cuteness skill by +1",

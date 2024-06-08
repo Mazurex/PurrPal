@@ -25,8 +25,9 @@ const economySchema = new mongoose.Schema({
   lastDaily: { type: Date, default: null },
 });
 
-const disabledSchema = new mongoose.Schema({
-  disabledRobbing: { type: Boolean, default: false },
+const settingsSchema = new mongoose.Schema({
+  robbing: { type: Boolean, default: true },
+  gifting: { type: Boolean, default: true },
 });
 
 const moneySchema = new mongoose.Schema({
@@ -34,7 +35,7 @@ const moneySchema = new mongoose.Schema({
   economy: economySchema,
   inventory: { type: Array, default: [] },
   cat: [catSchema],
-  disabled: disabledSchema,
+  settings: settingsSchema,
   created: { type: Date, default: Date.now() },
 });
 
